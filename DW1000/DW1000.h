@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015 by Thomas Trojer <thomas@trojer.net>
- * 					     Brian Plank <bdplank@gmail.com>
+ *                       Brian Plank <bdplank@gmail.com>
  * Decawave DW1000 library for arduino.
  *
  * This file is free software; you can redistribute it and/or modify
