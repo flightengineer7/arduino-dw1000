@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2015 by Thomas Trojer <thomas@trojer.net>
+ * 					     Brian Plank <bdplank@gmail.com>
  * Decawave DW1000 library for arduino.
  *
  * This file is free software; you can redistribute it and/or modify
@@ -20,6 +21,16 @@
 
 // no sub-address for register write
 #define NO_SUB 0x00
+#define SUB_2  0x02
+#define SUB_4  0x04
+#define SUB_6  0x06
+#define SUB_7  0x07
+#define SUB_8  0x08
+#define SUB_B  0x0B
+#define SUB_C  0x0C
+#define SUB_26 0x26
+#define SUB_1806 0x1806
+#define SUB_2804 0x2804
 
 // device id register
 #define DEV_ID 0x00
@@ -30,6 +41,8 @@
 #define LEN_SYS_CFG 4
 #define FFEN_BIT 0
 #define DIS_DRXB_BIT 12
+#define PHR_MODE_LSB 16
+#define PHR_MODE_MSB 17
 #define RXAUTR_BIT 29
 
 // device control register
@@ -42,6 +55,7 @@
 #define WAIT4RESP_BIT 7
 #define RXENAB_BIT 8
 #define RXDLYS_BIT 9
+#define FS_CTRL 0x2B
 
 // system event status register
 #define SYS_STATUS 0x0F
@@ -73,6 +87,12 @@
 // transmit control
 #define TX_FCTRL 0x08
 #define LEN_TX_FCTRL 5
+#define TX_CAL 0x2A
+
+// receive control register
+#define DRX_TUNE 27
+#define RF_CONF 28
+#define LDE_IF 0x2E
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,6 +105,7 @@
 #define boolean uint8_t
 #define byte uint8_t
 #define word uint16_t
+#define word uint32_t
 #define bitSet(value, bit) ((value) |= (1UL << (bit)))
 #define bitRead(value, bit) (((value) >> (bit)) & 0x01)
 #define bitClear(value, bit) ((value) &= ~(1UL << (bit)))
@@ -104,6 +125,9 @@ public:
 	~DW1000();
 
 	int getChipSelect();
+	
+	// Default Chip Setup Options
+	void setDefaultMode(short MODE);
 
 	// DEV_ID, device identifier
 	char* readDeviceIdentifier();
@@ -122,12 +146,16 @@ public:
 	void transmitRate(byte rate);
 	void pulseFrequency(byte freq);
 	void preambleLength(byte prealen);
+	void transmitFrameLength(word dataLength);
+	void tuneReceiver(byte rate, byte PRF, byte preamble, byte pac);
+	void setRFChannel(short channel);
 	void waitForResponse(boolean val);
 	void setData(byte data[], int n);
 	int getData(byte data[]);
 
 	// RX/TX default settings
 	void setDefaults();
+	void setNASA_RMC_2015();
 
 	// SYS_STATUS, device status flags
 	boolean isLDEDone();
@@ -150,21 +178,46 @@ public:
 	void cancelReceive();
 
 	// transmission
-	void newTransmit();
+	void newTransmit();	// ADD IFSDELAY
 	void startTransmit();
 	void cancelTransmit();
 
+	// reception channel
+	static const long RX_CHANNEL_1 = 0x
+	static const long RX_CHANNEL_2 = 0x
+	static const long RX_CHANNEL_3 = 0x
+	static const long RX_CHANNEL_4 = 0x
+	static const long RX_CHANNEL_5 = 0x
+	static const long RX_CHANNEL_7 = 0x
+	
+	// transmission channel
+	static const long TX_CHANNEL_1 = 0x00005C40;
+	static const long TX_CHANNEL_2 = 0x00045CA0;
+	static const long TX_CHANNEL_3 = 0x00086CC0;
+	static const long TX_CHANNEL_4 = 0x00045C80;
+	static const long TX_CHANNEL_5 = 0x001E3FE0;
+	static const long TX_CHANNEL_7 = 0x001E7DE0;
+	
+	// reception bit rate
+	static const byte RX_RATE_110KBPS = 0x0A;
+	static const byte RX_RATE_850KBPS = 0x01;		// Error in dw1000_user_manual_2_02.pdf ??
+	static const byte RX_RATE_6800KBPS = 0x01;		// Error in dw1000_user_manual_2_02.pdf ??
+	
 	// transmission bit rate
 	static const byte TX_RATE_110KBPS = 0x00;
 	static const byte TX_RATE_850KBPS = 0x01;
 	static const byte TX_RATE_6800KBPS = 0x02;
+	
+	// reception pulse frequency
+	static const byte RX_PULSE_FREQ_16MHz = 0x87;
+	static const byte RX_PULSE_FREQ_64MHz = 0x8D;
 
-	// transmission pulse frequencey
+	// transmission pulse frequency
 	// 0x00 is 4MHZ, but receiver in DW1000 does not support it (!??)
-	static const byte TX_PULSE_FREQ_16MHZ = 0x01; 
+	static const byte TX_PULSE_FREQ_16MHZ = 0x01;
 	static const byte TX_PULSE_FREQ_64MHZ = 0x02;
 
-	// preamble lengthes (PE + TXPSR bits)
+	// preamble lengths (PE + TXPSR bits)
 	static const byte TX_PREAMBLE_LEN_64 = 0x01;
 	static const byte TX_PREAMBLE_LEN_128 = 0x05;
 	static const byte TX_PREAMBLE_LEN_256 = 0x09;
@@ -173,7 +226,125 @@ public:
 	static const byte TX_PREAMBLE_LEN_1536 = 0x06;
 	static const byte TX_PREAMBLE_LEN_2048 = 0x0A;
 	static const byte TX_PREAMBLE_LEN_4096 = 0x03;
+	
+	// transmit power control - smart
+	static const long SMART_TX_CH_1_PRF_16MHz = 0x15355575;
+	static const long SMART_TX_CH_2_PRF_16MHz = 0x15355575;
+	static const long SMART_TX_CH_3_PRF_16MHz = 0x0F2F4F6F;	
+	static const long SMART_TX_CH_4_PRF_16MHz = 0x1F1F3F5F;
+	static const long SMART_TX_CH_5_PRF_16MHz = 0x0E082848;
+	static const long SMART_TX_CH_7_PRF_16MHz = 0x32527292;
+	static const long SMART_TX_CH_1_PRF_64MHz = 0x07274767;
+	static const long SMART_TX_CH_2_PRF_64MHz = 0x07274767;
+	static const long SMART_TX_CH_3_PRF_64MHz = 0x2B4B6B8B;
+	static const long SMART_TX_CH_4_PRF_64MHz = 0x3A5A7A9A;
+	static const long SMART_TX_CH_5_PRF_64MHz = 0x25456585;
+	static const long SMART_TX_CH_7_PRF_64MHz = 0x5171B1D1;
+	
+	// transmit power control - manual
+	static const long MANUAL_TX_CH_1_PRF_16MHz = 0x75757575;
+	static const long MANUAL_TX_CH_2_PRF_16MHz = 0x75757575;
+	static const long MANUAL_TX_CH_3_PRF_16MHz = 0x6F6F6F6F;
+	static const long MANUAL_TX_CH_4_PRF_16MHz = 0x5F5F5F5F;
+	static const long MANUAL_TX_CH_5_PRF_16MHz = 0x48484848;
+	static const long MANUAL_TX_CH_7_PRF_16MHz = 0x92929292;
+	static const long MANUAL_TX_CH_1_PRF_64MHz = 0x67676767;
+	static const long MANUAL_TX_CH_2_PRF_64MHz = 0x67676767;
+	static const long MANUAL_TX_CH_3_PRF_64MHz = 0x8B8B8B8B;
+	static const long MANUAL_TX_CH_4_PRF_64MHz = 0x9A9A9A9A;
+	static const long MANUAL_TX_CH_5_PRF_64MHz = 0x85858585;
+	static const long MANUAL_TX_CH_7_PRF_64MHz = 0xD1D1D1D1;
 
+	// frequency synthesizer PLL configuration
+	static const long PLL_CONFIG_CH_1 = 0x09000407;
+	static const long PLL_CONFIG_CH_2 = 0x08400508;
+	static const long PLL_CONFIG_CH_3 = 0x08401009;
+	static const long PLL_CONFIG_CH_4 = 0x08400508;
+	static const long PLL_CONFIG_CH_5 = 0x0800041D;
+	static const long PLL_CONFIG_CH_7 = 0x0800041D;
+	
+	// frequency synthesizer PLL tuning
+	static const byte PLL_TUNE_CH_1 = 0x1E;
+	static const byte PLL_TUNE_CH_2 = 0x26;
+	static const byte PLL_TUNE_CH_3 = 0x5E;
+	static const byte PLL_TUNE_CH_4 = 0x26;
+	static const byte PLL_TUNE_CH_5 = 0xA6;
+	static const byte PLL_TUNE_CH_7 = 0xA6;
+	
+	// start frame delimiter selection
+	static const byte SFD_STD_RATE_110KBPS   = 0x0A;
+	static const byte SFD_NSTD_RATE_110KBPS  = 0x16;
+	static const byte SFD_STD_RATE_850KBPS   = 0x01;		// Error in dw1000_user_manual_2_02.pdf ??
+	static const byte SFD_NSTD_RATE_850KBPS  = 0x06;
+	static const byte SFD_STD_RATE_6800KBPS  = 0x01;		// Error in dw1000_user_manual_2_02.pdf ??
+	static const byte SFD_NSTD_RATE_6800KBPS = 0x02;
+	
+	// receiver configuration
+	static const byte DRX_TUNE_RATE_110KBPS = 0x64;
+	static const byte DRX_TUNE_RATE_850_6800KBPS = 0x20;
+	static const byte DRX_TUNE_RATE_6800KBPS = 0x10;
+	
+	static const byte DRX_TUNE4H_PREAMBLE_SHORT = 0x10;
+	static const byte DRX_TUNE4H_PREAMBLE_LONG  = 0x28;
+	
+	// receive PAC size selection
+	static const long PAC_8_PRF_16MHz  = 0x311A002D;
+	static const long PAC_8_PRF_64MHz  = 0x313B006B;
+	static const long PAC_16_PRF_16MHz = 0x331A0052;
+	static const long PAC_16_PRF_64MHz = 0x333B00BE;
+	static const long PAC_32_PRF_16MHz = 0x351A009A;
+	static const long PAC_32_PRF_64MHz = 0x353B015E;
+	static const long PAC_64_PRF_16MHz = 0x371A011D;
+	static const long PAC_64_PRF_64MHz = 0x373B0296;
+	
+	// analog RF control
+	static const byte RX_ANALOG_STD  = 0xD8;
+	static const byte RX_ANALOG_NSTD = 0xBC;
+	
+	// automatic gain control configuration
+	static const word RX_AGC_TUNE_PRF_16MHz = 0x8870;
+	static const word RX_AGC_TUNE_PRF_64MHz = 0x889B;
+	
+	// leading edge detection interface configuration
+	static const word LDE_PRF_16MHz = 0x1607;
+	static const word LDE_PRF_64MHz = 0x0607;
+	
+	// leading edge detection interface replica coefficient
+	static const word LDE_REPC_RX_PCODE_1  = 0x5998;
+	static const word LDE_REPC_RX_PCODE_2  = 0x5998;
+	static const word LDE_REPC_RX_PCODE_3  = 0x51EA;
+	static const word LDE_REPC_RX_PCODE_4  = 0x428E;
+	static const word LDE_REPC_RX_PCODE_5  = 0x451E;
+	static const word LDE_REPC_RX_PCODE_6  = 0x2E14;
+	static const word LDE_REPC_RX_PCODE_7  = 0x8000;
+	static const word LDE_REPC_RX_PCODE_8  = 0x51EA;
+	static const word LDE_REPC_RX_PCODE_9  = 0x28F4;
+	static const word LDE_REPC_RX_PCODE_10 = 0x3332;
+	static const word LDE_REPC_RX_PCODE_11 = 0x3AE0;
+	static const word LDE_REPC_RX_PCODE_12 = 0x3D70;
+	static const word LDE_REPC_RX_PCODE_13 = 0x3AE0;
+	static const word LDE_REPC_RX_PCODE_14 = 0x35C2;
+	static const word LDE_REPC_RX_PCODE_15 = 0x2B84;
+	static const word LDE_REPC_RX_PCODE_16 = 0x35C2;
+	static const word LDE_REPC_RX_PCODE_17 = 0x3332;
+	static const word LDE_REPC_RX_PCODE_18 = 0x35C2;
+	static const word LDE_REPC_RX_PCODE_19 = 0x35C2;
+	static const word LDE_REPC_RX_PCODE_20 = 0x47AE;
+	static const word LDE_REPC_RX_PCODE_21 = 0x3AE0;
+	static const word LDE_REPC_RX_PCODE_22 = 0x3850;
+	static const word LDE_REPC_RX_PCODE_23 = 0x30A2;
+	static const word LDE_REPC_RX_PCODE_24 = 0x3850;
+	// ?TODO? implement selection procedure based on channel
+	// TODO implement writing to LDE_IF, SUB_2804 register
+	
+	// transmitter pulse generator delay
+	static const byte PGD_CH_1 = 0xC9;
+	static const byte PGD_CH_2 = 0xC2;
+	static const byte PGD_CH_3 = 0xC5;
+	static const byte PGD_CH_4 = 0x95;
+	static const byte PGD_CH_5 = 0xC0;
+	static const byte PGD_CH_7 = 0x93;
+	
 #ifdef DEBUG
 	byte debugBuffer[1024];
 	inline void clearDebugBuffer() {
