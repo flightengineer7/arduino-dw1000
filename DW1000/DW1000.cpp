@@ -45,14 +45,14 @@ void DW1000::setDefaultMode(short MODE)	{
 	switch (MODE){
 		case 1:
 			// Transmit Settings
-			transmitRate(TX_RATE_100KBPS);
+			transmitRate(TX_RATE_110KBPS);
 			pulseFrequency(TX_PULSE_FREQ_16MHZ);
 			preambleLength(TX_PREAMBLE_LEN_1024);
 			transmitFrameLength(12);
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_16MHz, RX_PREAMBLE_LEN_1024, 32)
+			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_16MHz, TX_PREAMBLE_LEN_1024, 32);
 			break;
 		case 2:
 			// Transmit Settings
@@ -63,7 +63,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_16MHz, RX_PREAMBLE_LEN_128, 8);
+			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_16MHz, TX_PREAMBLE_LEN_128, 8);
 			break;
 		case 3:
 			// Transmit Settings
@@ -74,7 +74,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_16MHz, RX_PREAMBLE_LEN_1024, 32);
+			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_16MHz, TX_PREAMBLE_LEN_1024, 32);
 			break;
 		case 4:
 			// Transmit Settings
@@ -85,7 +85,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_16MHz, RX_PREAMBLE_LEN_128, 8);
+			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_16MHz, TX_PREAMBLE_LEN_128, 8);
 			break;
 		case 5:
 			// Transmit Settings
@@ -96,7 +96,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_16MHz, RX_PREAMBLE_LEN_1024, 32);
+			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_16MHz, TX_PREAMBLE_LEN_1024, 32);
 			break;
 		case 6:
 			// Transmit Settings
@@ -107,7 +107,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_16MHz, RX_PREAMBLE_LEN_128, 8);
+			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_16MHz, TX_PREAMBLE_LEN_128, 8);
 			break;
 		case 7:
 			// Transmit Settings
@@ -118,7 +118,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_16MHz, RX_PREAMBLE_LEN_1024, 32);
+			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_16MHz, TX_PREAMBLE_LEN_1024, 32);
 			break;
 		case 8:
 			// Transmit Settings
@@ -129,7 +129,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_16MHz, RX_PREAMBLE_LEN_1024, 32);
+			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_16MHz, TX_PREAMBLE_LEN_1024, 32);
 			break;
 		case 9:
 			// Transmit Settings
@@ -140,7 +140,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_64MHz, RX_PREAMBLE_LEN_1024, 32);
+			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_64MHz, TX_PREAMBLE_LEN_1024, 32);
 			break;
 		case 10:
 			// Transmit Settings
@@ -151,7 +151,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_64MHz, RX_PREAMBLE_LEN_128, 8);
+			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_64MHz, TX_PREAMBLE_LEN_128, 8);
 			break;
 		case 11:
 			// Transmit Settings
@@ -162,7 +162,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_64MHz, RX_PREAMBLE_LEN_1024, 32);
+			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_64MHz, TX_PREAMBLE_LEN_1024, 32);
 			break;
 		case 12:
 			// Transmit Settings
@@ -173,7 +173,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_64MHz, RX_PREAMBLE_LEN_128, 8);
+			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_64MHz, TX_PREAMBLE_LEN_128, 8);
 			break;
 		case 13:
 			// Transmit Settings
@@ -184,7 +184,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_64MHz, RX_PREAMBLE_LEN_1024, 32);
+			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_64MHz, TX_PREAMBLE_LEN_1024, 32);
 			break;
 		case 14:
 			// Transmit Settings
@@ -195,7 +195,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_64MHz, RX_PREAMBLE_LEN_128, 8);
+			tuneReceiver(RX_RATE_6800KBPS, RX_PULSE_FREQ_64MHz, TX_PREAMBLE_LEN_128, 8);
 			break;
 		case 15:
 			// Transmit Settings
@@ -206,7 +206,7 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_64MHz, RX_PREAMBLE_LEN_1024, 32);
+			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_64MHz, TX_PREAMBLE_LEN_1024, 32);
 			break;
 		case 16:
 			// Transmit Settings
@@ -217,8 +217,9 @@ void DW1000::setDefaultMode(short MODE)	{
 			
 			// Receive Settings
 			
-			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_64MHz, RX_PREAMBLE_LEN_1024, 32);
+			tuneReceiver(RX_RATE_110KBPS, RX_PULSE_FREQ_64MHz, TX_PREAMBLE_LEN_1024, 32);
 			break;
+	}
 }
 
 /* ###########################################################################
@@ -317,24 +318,24 @@ void DW1000::preambleLength(byte prealen) {
 	// TODO set PAC size accordingly for RX (see table 6, page 31)
 }
 
-void DW1000::transmitFrameLength(word dataLength)	{
-	if (dataLength <= 127):	{
+void DW1000::transmitFrameLength(byte dataLength)	{
+	if (dataLength <= 127)	{
 		setBit(_syscfg, LEN_SYS_CFG, PHR_MODE_LSB, 0);
 		setBit(_syscfg, LEN_SYS_CFG, PHR_MODE_MSB, 0);
 		}
-	else:	{
+	else	{
 		setBit(_syscfg, LEN_SYS_CFG, PHR_MODE_LSB, 1);
 		setBit(_syscfg, LEN_SYS_CFG, PHR_MODE_MSB, 1);
 		dataLength &= 0xFF;
 	}
 	writeBytes(SYS_CFG, NO_SUB, _syscfg, LEN_SYS_CFG);
-	writeBytes(TX_FCTRL, NO_SUB, dataLength, 2);
+	writeBytes(TX_FCTRL, NO_SUB, &dataLength, 2);
 }
 
 //------------------------------------------------------------------------------------------------------
 void DW1000::tuneReceiver(byte rate, byte PRF, byte preamble, byte pac)	{	
-	// TODO define rfTune[i]
-	
+	byte _rfTune[11];	// 
+	word _temp;		// 
 	pac = pac & 0x78;	// Aid in eliminating erroneous PAC values (8, 16, 32, 64)
 	
 	switch (rate)	{
@@ -344,18 +345,19 @@ void DW1000::tuneReceiver(byte rate, byte PRF, byte preamble, byte pac)	{
 			break;
 		case RX_RATE_850KBPS:
 			_temp = (word)(SFD_STD_RATE_850KBPS & 0x00FF);
-			_rfTune[2] = (word)(DRX_TUNE_RATE_850_6800KBPS & 0x00FF);
-			break;
-		case RX_RATE_6800KBPS:
-			_temp = (word)(SFD_STD_RATE_6800KBPS & 0x00FF);
-			if (preamble == TX_PREAMBLE_LEN_64):
+// Error in dw1000_user_manual_2_02.pdf ?? -> Uncomment changes if remedied
+//			_rfTune[2] = (word)(DRX_TUNE_RATE_850_6800KBPS & 0x00FF);
+//			break;
+//		case RX_RATE_6800KBPS:
+//			_temp = (word)(SFD_STD_RATE_6800KBPS & 0x00FF);
+			if (preamble == TX_PREAMBLE_LEN_64)
 				_rfTune[2] = (word)(DRX_TUNE_RATE_6800KBPS & 0x00FF);
-			else:
+			else
 				_rfTune[2] = (word)(DRX_TUNE_RATE_850_6800KBPS & 0x00FF);
 			break;
 	}
-	writeBytes(DRX_TUNE, SUB_2, _rfTune[0], 2);
-	writeBytes(DRX_TUNE, SUB_6, _rfTune[2], 2);
+	writeBytes(DRX_TUNE, SUB_2, &_rfTune[0], 2);
+	writeBytes(DRX_TUNE, SUB_6, &_rfTune[2], 2);
 	
 	switch (PRF) {
 		case RX_PULSE_FREQ_16MHz:
@@ -393,20 +395,22 @@ void DW1000::tuneReceiver(byte rate, byte PRF, byte preamble, byte pac)	{
 					_rfTune[6] = (long)(PAC_64_PRF_64MHz);
 					break;
 			break;
+			}
+		writeBytes(DRX_TUNE, SUB_4, &_rfTune[4], 2);
+		writeBytes(DRX_TUNE, SUB_8, &_rfTune[6], 4);
+		writeBytes(LDE_IF, SUB_1806, &_rfTune[10], 2);
+		
+		if (preamble == TX_PREAMBLE_LEN_64)
+			_rfTune[12] = (word)(DRX_TUNE4H_PREAMBLE_SHORT & 0x00FF);
+		else
+			_rfTune[12] = (word)(DRX_TUNE4H_PREAMBLE_LONG & 0x00FF);
+		writeBytes(DRX_TUNE, SUB_26, &_rfTune[12], 2);
 	}
-	writeBytes(DRX_TUNE, SUB_4, _rfTune[4], 2);
-	writeBytes(DRX_TUNE, SUB_8, _rfTune[6], 4);
-	writeBytes(LDE_IF, SUB_1806, _rfTune[10], 2);
-	
-	if (preamble == TX_PREAMBLE_LEN_64):
-		_rfTune[12] = (word)(DRX_TUNE4H_PREAMBLE_SHORT & 0x00FF);
-	else
-		_rfTune[12] = (word)(DRX_TUNE4H_PREAMBLE_LONG & 0x00FF);
-	writeBytes(DRX_TUNE, SUB_26, _rfTune[12], 2);
 }
 
 void DW1000::setRFChannel(short channel)	{
-	// TODO define _chSettings[i]
+	byte _chSettings[12];
+	
 	switch (channel)	{
 		case 1:
 			_chSettings[0] = (byte)(RX_ANALOG_STD);
@@ -451,11 +455,11 @@ void DW1000::setRFChannel(short channel)	{
 			_chSettings[11] = (byte)(PLL_TUNE_CH_7);
 			break;
 	}
-	writeBytes(RF_CONF, SUB_B, _chSettings[0], 1);	// Receive settings
-	writeBytes(RF_CONF, SUB_C, _chSettings[1], 4);	// Transmit settings
-	writeBytes(TX_CAL, SUB_B, _chSettings[5], 2);	// Transmit settings
-	writeBytes(FS_CTRL, SUB_7, _chSettings[7], 4);	// Frequency PLL settings
-	writeBytes(FS_CTRL, SUB_B, _chSettings[11], 2);	// Frequency PLL Settings
+	writeBytes(RF_CONF, SUB_B, &_chSettings[0], 1);	// Receive settings
+	writeBytes(RF_CONF, SUB_C, &_chSettings[1], 4);	// Transmit settings
+	writeBytes(TX_CAL, SUB_B, &_chSettings[5], 2);	// Transmit settings
+	writeBytes(FS_CTRL, SUB_7, &_chSettings[7], 4);	// Frequency PLL settings
+	writeBytes(FS_CTRL, SUB_B, &_chSettings[11], 2);// Frequency PLL Settings
 }
 
 void DW1000::newReceive() {
@@ -695,6 +699,7 @@ void DW1000::writeBytes(byte cmd, word offset, byte data[], int n) {
 	int headerLen = 1;
 	int i;
 	// TODO proper error handling: address out of bounds
+	// TODO integrate SUB options
 
 	if(offset == NO_SUB) {
 		header[0] = WRITE | cmd;
